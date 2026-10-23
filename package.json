@@ -1,0 +1,16 @@
+{
+  "name": "neon-holdem",
+  "version": "1.0.0",
+  "description": "Private real-time Texas Hold'em for you and your friends",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/handEval.test.js && node test/sim.js && node test/socket.test.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}
