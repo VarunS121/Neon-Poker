@@ -10,6 +10,7 @@ const GAMES = {
   uno: require('./games/uno'),
   spin: require('./games/spin'),
   spades: require('./games/spades'),
+  yahtzee: require('./games/yahtzee'),
 };
 
 const PORT = process.env.PORT || 3000;

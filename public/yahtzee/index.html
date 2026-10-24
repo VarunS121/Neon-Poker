@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Yahtzee</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎲</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Home -->
+  <section id="home" class="screen center">
+    <a class="home-link" href="/">← Game Night</a>
+    <div class="panel-card">
+      <div class="logo"><div class="logo-dice" id="logo-dice"></div><h1>YAHTZEE</h1></div>
+      <p class="sub">Five dice, three rolls, thirteen boxes. Play solo, with friends, or against bots.</p>
+      <label>Your name <input id="name" maxlength="16" placeholder="e.g. Varun" autocomplete="nickname"></label>
+      <div class="split">
+        <div class="box"><h3>New game</h3><button id="create" class="primary">Create game</button></div>
+        <div class="box"><h3>Join a game</h3><input id="code" maxlength="5" placeholder="CODE" autocomplete="off"><button id="join" class="primary">Join</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Waiting room -->
+  <section id="lobby" class="screen center hidden">
+    <div class="panel-card">
+      <h2>Game <span id="lobby-code" class="code"></span></h2>
+      <button id="invite" class="ghost">🔗 Copy invite link</button>
+      <ul id="lobby-players"></ul>
+      <button id="add-bot" class="ghost">🤖 Add a computer player</button>
+      <div id="host-settings">
+        <div class="row"><span>Turn timer</span><div class="seg" id="lobby-time"><button data-time="0">Off</button><button data-time="30">30s</button><button data-time="60">60s</button><button data-time="90">90s</button></div></div>
+      </div>
+      <p id="lobby-note" class="sub"></p>
+      <button id="start" class="primary">Start game</button>
+      <button id="leave-lobby" class="ghost">Leave</button>
+    </div>
+  </section>
+
+  <!-- Game -->
+  <section id="game" class="screen hidden">
+    <header class="topbar">
+      <div class="mini-logo">🎲 YAHTZEE</div>
+      <div class="room">GAME <b id="room-code"></b> <button id="invite2" class="ghost small">Invite</button></div>
+      <div id="round" class="round"></div>
+      <div class="spacer"></div>
+      <button id="sound" class="ghost small" title="Sound">🔊</button>
+      <button id="leave" class="ghost small">Leave</button>
+    </header>
+    <div class="layout">
+      <main class="play">
+        <div id="status" class="status"></div>
+        <div class="tray">
+          <div id="dice" class="dice"></div>
+          <p id="hint" class="hint"></p>
+          <button id="b-roll" class="roll-btn">Roll</button>
+          <div id="splash" class="splash"></div>
+        </div>
+        <div class="tabs-panel">
+          <div class="tabs"><button data-tab="log" class="on">Log</button><button data-tab="chat">Chat <span id="chat-badge" class="badge hidden"></span></button><button data-tab="rules">Rules</button></div>
+          <div id="tab-log" class="tab"></div>
+          <div id="tab-chat" class="tab hidden"><div id="chat-list"></div><form id="chat-form"><input id="chat-input" maxlength="300" placeholder="Say something…" autocomplete="off"><button>Send</button></form></div>
+          <div id="tab-rules" class="tab hidden rules">
+            <p>On your turn roll up to <b>three times</b>. Click dice to <b>hold</b> them between rolls. Then fill exactly one open box. A zero is allowed.</p>
+            <p><b>Upper section:</b> add up that number. Reach <b>63</b> in the upper section for a <b>+35</b> bonus.</p>
+            <p><b>3/4 of a Kind:</b> total of all dice. <b>Full House</b> 25. <b>Small Straight</b> (4 in a row) 30. <b>Large Straight</b> (5 in a row) 40. <b>YAHTZEE</b> (all five the same) 50. <b>Chance:</b> total of all dice.</p>
+            <p><b>Bonus Yahtzees:</b> +100 each once your YAHTZEE box holds 50. <b>Joker rules:</b> a bonus Yahtzee must go in its upper box if that box is open. Otherwise it can go in any lower box at full value (Full House 25, straights 30/40). If every lower box is filled, it goes in an upper box.</p>
+            <p>After 13 rounds the highest total wins.</p>
+          </div>
+        </div>
+      </main>
+      <aside class="card-wrap"><table id="scorecard" class="scorecard"></table></aside>
+    </div>
+  </section>
+
+  <div id="modal" class="modal hidden"><div class="modal-card" id="modal-card"></div></div>
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/net.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

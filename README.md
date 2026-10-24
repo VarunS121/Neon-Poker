@@ -9,8 +9,9 @@ Private, real-time games for you and your friends in the browser. There are no a
 | 🃏 **UNO Show 'Em No Mercy**: the 168-card brutal edition | 2–10 | `/uno/` |
 | 🌀 **UNO Spin**: classic UNO plus the Spin wheel, with the classic or new wheel | 2–10 | `/spin/` |
 | ♠ **Spades**: the partnership trick-taking classic, with computer players for empty seats | 4 (bots fill in) | `/spades/` |
+| 🎲 **Yahtzee**: five dice, three rolls, thirteen boxes — solo, with friends or against bots | 1–8 | `/yahtzee/` |
 
-One Node server runs all five games. The home page at `/` lets you pick a game. Each game has its own rooms, so room codes never mix between games. Invite links from before the merge (`/?room=CODE`) still open the poker table.
+One Node server runs all six games. The home page at `/` lets you pick a game. Each game has its own rooms, so room codes never mix between games. Invite links from before the merge (`/?room=CODE`) still open the poker table.
 
 ## Run it on your computer
 
@@ -112,22 +113,40 @@ Four players in two partnerships, with partners sitting opposite each other. In 
 - **Winning.** The first team to reach the target (250, 300 or 500) wins, and a team at −200 or lower loses. If both teams pass the target with the same score, play continues.
 - **Computer players.** They estimate their bids from high cards and spade length, then play to win tricks cheaply or duck. In testing, a team of computer players makes its bid about 90% of the time. With a turn timer on, a player who runs out of time gets the computer's move.
 
+## 🎲 Yahtzee
+
+Each turn you roll five dice up to three times, clicking dice to hold them between rolls. Then you must fill exactly one open box on your scorecard; a zero is allowed.
+
+- **Upper section:** Ones to Sixes score the total of the matching dice. If these six boxes add up to 63 or more, you get a **+35** bonus.
+- **Lower section:**
+  - **3 of a Kind**, **4 of a Kind** and **Chance:** the total of all five dice.
+  - **Full House:** 25.
+  - **Small Straight** (4 in a row): 30.
+  - **Large Straight** (5 in a row): 40.
+  - **YAHTZEE** (all five the same): 50.
+- **Bonus Yahtzees:** each one is worth **+100** once your YAHTZEE box holds 50. The official **Joker rules** decide where it goes. It must go in its upper box if that box is open. Otherwise it can go in any lower box at full value. If every lower box is filled, it goes in an upper box.
+- **Winning:** after 13 rounds, the highest total wins. Wins carry over between games, and the first turn rotates.
+
+The scorecard shows every player side by side and previews what each open box would score. The host can add computer players (they average about 210 points) and set a turn timer. If your time runs out, the computer finishes your turn.
+
 ---
 
 ## Project layout
 
 ```
-server.js              Game Night server: home page, static files, routes /poker/ws, /catan/ws, /uno/ws, /spin/ws and /spades/ws
+server.js              Game Night server: home page, static files, routes /poker/ws, /catan/ws, /uno/ws, /spin/ws, /spades/ws and /yahtzee/ws
 games/poker.js         Poker rooms and WebSocket handlers
 games/catan.js         Catan rooms and WebSocket handlers
 games/uno.js           UNO rooms and WebSocket handlers
 games/spin.js          UNO Spin rooms and WebSocket handlers
 games/spades.js        Spades rooms, seats and WebSocket handlers
+games/yahtzee.js       Yahtzee rooms and WebSocket handlers
 src/poker/             Hold'em engine (table.js) and hand evaluator (handEval.js, also used in the browser)
 src/catan/             Catan rules engine (game.js) and board generator (board.js)
 src/uno/               UNO No Mercy rules engine (game.js)
 src/spin/              UNO Spin rules engine (game.js), both wheel editions
 src/spades/            Spades rules engine and computer players (game.js)
+src/yahtzee/           Yahtzee rules engine and computer players (game.js)
 public/index.html      Game Night home page
 public/net.js          Small reconnecting WebSocket client shared by both games
 public/poker/          Poker client
@@ -135,6 +154,7 @@ public/catan/          Catan client (art.js holds the SVG artwork)
 public/uno/            UNO client
 public/spin/           UNO Spin client and wheel
 public/spades/         Spades client
+public/yahtzee/        Yahtzee client
 test/                  Tests for each game, plus site routing (site.test.js)
 ```
 
@@ -150,4 +170,5 @@ This runs every game's tests and checks the site routing.
 - **UNO** (`npm run test:uno`): rule checks for every card and rule, hundreds of random rounds at 2–10 players checking that all 168 cards are always accounted for, and a socket test.
 - **UNO Spin** (`npm run test:spin`): rule checks for every wheel space on both wheels, dozens of full games to the target score checking that all 112 cards are always accounted for, and a socket test.
 - **Spades** (`npm run test:spades`): rule checks for following suit, breaking spades, trick winners, every scoring case including bags, Nil and Blind Nil, and computer players finishing whole games; 100 random games checking card and trick counts; and a socket test.
+- **Yahtzee** (`npm run test:yahtzee`): rule checks for every box, the upper bonus, bonus Yahtzees and all three Joker cases, and computer-player strength; 150 random games of 1–8 players checking that every card fills up and totals add up; and a socket test.
 - **Catan** (`npm run test:catan`): targeted rule checks, dozens of full random games on both boards with invariants checked after every action, a game played entirely by timeouts, and a socket test.

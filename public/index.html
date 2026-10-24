@@ -7,7 +7,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎲</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Cinzel:wght@900&family=Bungee&family=Playfair+Display:wght@900&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Cinzel:wght@900&family=Bungee&family=Playfair+Display:wght@900&family=Lilita+One&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root { --bg: #0a0b14; --text: #eef0ff; --muted: #9aa0c3; --line: #262a45; }
     * { box-sizing: border-box; }
@@ -95,6 +95,17 @@
     .sc b { position: absolute; top: 4px; left: 6px; font: 800 15px 'Outfit', sans-serif; }
     .spades:hover .sc { transform: rotate(calc(var(--r) * 1.4)) translate(calc(var(--x) * 1.3), var(--y)); }
 
+    /* yahtzee card */
+    .yahtzee .art { background: radial-gradient(ellipse at 50% 40%, #2f8a5f, #1d5c3f 70%); box-shadow: inset 0 0 0 8px #5a2e17; }
+    .yahtzee h2 { font: 400 28px 'Lilita One', sans-serif; color: #ffd166; text-shadow: 0 3px 0 #a3271f; letter-spacing: 1px; }
+    .yahtzee:hover { box-shadow: 0 24px 60px #ffd16633, 0 0 0 1px #ffd16666; }
+    .yahtzee .play { background: linear-gradient(180deg, #ff6b6b, #e63946); color: #fff; }
+    .ydice { display: flex; gap: 8px; }
+    .yd { width: 46px; height: 46px; border-radius: 10px; background: linear-gradient(145deg, #fff, #e9e1f0); display: grid; grid-template-columns: repeat(3, 1fr); padding: 6px; gap: 2px;
+      box-shadow: 0 4px 0 #b8a9c9, 0 8px 14px #0009; transition: transform .3s; }
+    .yd i { border-radius: 50%; } .yd i.p { background: #2b2140; }
+    .yahtzee:hover .yd { transform: translateY(-8px) rotate(var(--r)); }
+
     footer { margin-top: 40px; color: var(--muted); font-size: 14px; text-align: center; }
     @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
   </style>
@@ -164,6 +175,15 @@
         <p>The partnership classic: bid your tricks, go Nil if you dare, and trump with spades. Fill empty seats with computer players.</p>
         <div class="meta"><span>4 players (bots fill in)</span><span>Cards</span></div>
         <span class="play">Play Spades →</span>
+      </div>
+    </a>
+    <a class="game yahtzee" href="/yahtzee/">
+      <div class="art"><div class="ydice"><div class="yd" style="--r:-12deg"><i class="p"></i><i class=""></i><i class="p"></i><i class=""></i><i class="p"></i><i class=""></i><i class="p"></i><i class=""></i><i class="p"></i></div><div class="yd" style="--r:8deg"><i class="p"></i><i class=""></i><i class="p"></i><i class=""></i><i class="p"></i><i class=""></i><i class="p"></i><i class=""></i><i class="p"></i></div><div class="yd" style="--r:-4deg"><i class="p"></i><i class=""></i><i class="p"></i><i class=""></i><i class="p"></i><i class=""></i><i class="p"></i><i class=""></i><i class="p"></i></div><div class="yd" style="--r:10deg"><i class="p"></i><i class=""></i><i class="p"></i><i class=""></i><i class="p"></i><i class=""></i><i class="p"></i><i class=""></i><i class="p"></i></div><div class="yd" style="--r:-8deg"><i class="p"></i><i class=""></i><i class="p"></i><i class=""></i><i class="p"></i><i class=""></i><i class="p"></i><i class=""></i><i class="p"></i></div></div></div>
+      <div class="info">
+        <h2>YAHTZEE</h2>
+        <p>Five dice, three rolls, thirteen boxes. Chase the upper bonus, the straights and the big 50. Play solo, with friends or against bots.</p>
+        <div class="meta"><span>1–8 players</span><span>Dice</span></div>
+        <span class="play">Play Yahtzee →</span>
       </div>
     </a>
   </main>
