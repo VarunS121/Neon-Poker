@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Spades</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♠</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Home -->
+  <section id="home" class="screen center">
+    <a class="home-link" href="/">← Game Night</a>
+    <div class="panel-card">
+      <div class="logo"><span class="pip">♠</span><h1>Spades</h1></div>
+      <p class="sub">Partners, bids, Nil, and the spade that always wins. Fill empty seats with bots.</p>
+      <label>Your name <input id="name" maxlength="16" placeholder="e.g. Varun" autocomplete="nickname"></label>
+      <div class="split">
+        <div class="box"><h3>New game</h3><button id="create" class="primary">Create game</button></div>
+        <div class="box"><h3>Join a game</h3><input id="code" maxlength="5" placeholder="CODE" autocomplete="off"><button id="join" class="primary">Join</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Waiting room -->
+  <section id="lobby" class="screen center hidden">
+    <div class="panel-card wide">
+      <h2>Game <span id="lobby-code" class="code"></span></h2>
+      <button id="invite" class="ghost">🔗 Copy invite link</button>
+      <p class="sub">Partners sit opposite each other. Click a seat to sit there.</p>
+      <div id="seat-map" class="seat-map"></div>
+      <div id="watchers" class="sub"></div>
+      <div id="host-settings">
+        <div class="row"><span>Points to win</span><div class="seg" id="lobby-target"><button data-t="250">250</button><button data-t="300">300</button><button data-t="500">500</button></div></div>
+        <div class="row"><span>Blind Nil <small>(only when behind by 100+)</small></span><div class="seg" id="lobby-blind"><button data-on="1">On</button><button data-on="0">Off</button></div></div>
+        <div class="row"><span>Turn timer</span><div class="seg" id="lobby-time"><button data-time="0">Off</button><button data-time="15">15s</button><button data-time="30">30s</button><button data-time="60">60s</button></div></div>
+      </div>
+      <p id="lobby-note" class="sub"></p>
+      <button id="start" class="primary">Start game</button>
+      <button id="leave-lobby" class="ghost">Leave</button>
+    </div>
+  </section>
+
+  <!-- Game -->
+  <section id="game" class="screen hidden">
+    <header class="topbar">
+      <div class="mini-logo">♠ Spades</div>
+      <div class="room">GAME <b id="room-code"></b></div>
+      <div id="scoreboard" class="scoreboard"></div>
+      <div class="spacer"></div>
+      <button id="sound" class="ghost small" title="Sound">🔊</button>
+      <button id="leave" class="ghost small">Leave</button>
+    </header>
+    <div class="layout">
+      <main class="felt">
+        <div class="seat-tag pos-top" id="pos-top"></div>
+        <div class="seat-tag pos-left" id="pos-left"></div>
+        <div class="seat-tag pos-right" id="pos-right"></div>
+        <div class="trick-area">
+          <div id="trick" class="trick"></div>
+          <div id="broken" class="broken hidden" title="Spades have been broken">♠ broken</div>
+          <button id="last-trick" class="ghost small last-btn">Last trick</button>
+        </div>
+        <div id="status" class="status"></div>
+        <div id="bidbox" class="bidbox hidden"></div>
+        <div id="splash" class="splash"></div>
+        <div class="me">
+          <div class="seat-tag pos-bottom" id="pos-bottom"></div>
+          <div id="hand" class="hand"></div>
+        </div>
+      </main>
+      <aside class="side">
+        <div class="tabs"><button data-tab="log" class="on">Log</button><button data-tab="chat">Chat <span id="chat-badge" class="badge hidden"></span></button><button data-tab="history">Scores</button><button data-tab="rules">Rules</button></div>
+        <div id="tab-log" class="tab"></div>
+        <div id="tab-chat" class="tab hidden"><div id="chat-list"></div><form id="chat-form"><input id="chat-input" maxlength="300" placeholder="Table talk…" autocomplete="off"><button>Send</button></form></div>
+        <div id="tab-history" class="tab hidden"></div>
+        <div id="tab-rules" class="tab hidden rules">
+          <p><b>Teams:</b> you and the player opposite are partners.</p>
+          <p><b>Bid</b> how many tricks you'll take (1–13), or <b>Nil</b> to promise none. Your team's bids add up to the contract. <b>Blind Nil</b> (if on) is bid before seeing your cards, only when your team is 100+ behind.</p>
+          <p><b>Play:</b> follow the suit led if you can. Spades are trumps: the highest spade wins, otherwise the highest card of the led suit. You can't lead spades until they're broken (someone trumps with one), unless you only have spades.</p>
+          <p><b>Scoring:</b> make your contract for 10× the bid, +1 for each extra trick (a <b>bag</b>). Fall short and lose 10× the bid. Every 10 bags costs 100. Nil is +100 / −100 (Blind Nil ±200); a broken Nil's tricks count as bags.</p>
+          <p><b>Winning:</b> first team to the target. A team at −200 loses.</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <div id="modal" class="modal hidden"><div class="modal-card" id="modal-card"></div></div>
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/net.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

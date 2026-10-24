@@ -8,8 +8,9 @@ Private, real-time games for you and your friends in the browser. There are no a
 | 🏝️ **Catan**: the full base game and the 5–6 player extension | 2–4 or 5–6 | `/catan/` |
 | 🃏 **UNO Show 'Em No Mercy**: the 168-card brutal edition | 2–10 | `/uno/` |
 | 🌀 **UNO Spin**: classic UNO plus the Spin wheel, with the classic or new wheel | 2–10 | `/spin/` |
+| ♠ **Spades**: the partnership trick-taking classic, with computer players for empty seats | 4 (bots fill in) | `/spades/` |
 
-One Node server runs all four games. The home page at `/` lets you pick a game. Each game has its own rooms, so room codes never mix between games. Invite links from before the merge (`/?room=CODE`) still open the poker table.
+One Node server runs all five games. The home page at `/` lets you pick a game. Each game has its own rooms, so room codes never mix between games. Invite links from before the merge (`/?room=CODE`) still open the poker table.
 
 ## Run it on your computer
 
@@ -98,26 +99,42 @@ Classic UNO: match color, number or symbol, or draw one card when you can't or w
 
 The wheel lands on a space at random, with every space equally likely. The rules don't give the real wheel's slot sizes, so this is an approximation. The first player to reach the target score (250, 500 or 1000) wins.
 
+## ♠ Spades
+
+Four players in two partnerships, with partners sitting opposite each other. In the waiting room you pick a seat, and the host can fill any empty seat with a computer player.
+
+- **Bidding.** Each player bids the number of tricks they expect to win (1–13), or **Nil** to promise none. A team's bids add up to its contract. With **Blind Nil** turned on, a player whose team is behind by 100 or more may bid it before looking at their cards.
+- **Play.** You must follow the suit that was led. Spades are trumps. Spades can't be led until they're broken (someone has played a spade on another suit), unless you hold only spades.
+- **Scoring.**
+  - Making the contract scores 10 × the bid, plus 1 for each extra trick (a **bag**). Falling short loses 10 × the bid.
+  - Every 10 bags costs 100 points.
+  - Nil scores +100 or −100, and Blind Nil ±200. Tricks won by a player whose Nil failed count as bags for their team.
+- **Winning.** The first team to reach the target (250, 300 or 500) wins, and a team at −200 or lower loses. If both teams pass the target with the same score, play continues.
+- **Computer players.** They estimate their bids from high cards and spade length, then play to win tricks cheaply or duck. In testing, a team of computer players makes its bid about 90% of the time. With a turn timer on, a player who runs out of time gets the computer's move.
+
 ---
 
 ## Project layout
 
 ```
-server.js              Game Night server: home page, static files, routes /poker/ws, /catan/ws, /uno/ws and /spin/ws
+server.js              Game Night server: home page, static files, routes /poker/ws, /catan/ws, /uno/ws, /spin/ws and /spades/ws
 games/poker.js         Poker rooms and WebSocket handlers
 games/catan.js         Catan rooms and WebSocket handlers
 games/uno.js           UNO rooms and WebSocket handlers
 games/spin.js          UNO Spin rooms and WebSocket handlers
+games/spades.js        Spades rooms, seats and WebSocket handlers
 src/poker/             Hold'em engine (table.js) and hand evaluator (handEval.js, also used in the browser)
 src/catan/             Catan rules engine (game.js) and board generator (board.js)
 src/uno/               UNO No Mercy rules engine (game.js)
 src/spin/              UNO Spin rules engine (game.js), both wheel editions
+src/spades/            Spades rules engine and computer players (game.js)
 public/index.html      Game Night home page
 public/net.js          Small reconnecting WebSocket client shared by both games
 public/poker/          Poker client
 public/catan/          Catan client (art.js holds the SVG artwork)
 public/uno/            UNO client
 public/spin/           UNO Spin client and wheel
+public/spades/         Spades client
 test/                  Tests for each game, plus site routing (site.test.js)
 ```
 
@@ -132,4 +149,5 @@ This runs every game's tests and checks the site routing.
 - **Poker** (`npm run test:poker`): hand-evaluator tests, then thousands of random hands at 2–9 players checking that no chips are created or lost, then an end-to-end socket test.
 - **UNO** (`npm run test:uno`): rule checks for every card and rule, hundreds of random rounds at 2–10 players checking that all 168 cards are always accounted for, and a socket test.
 - **UNO Spin** (`npm run test:spin`): rule checks for every wheel space on both wheels, dozens of full games to the target score checking that all 112 cards are always accounted for, and a socket test.
+- **Spades** (`npm run test:spades`): rule checks for following suit, breaking spades, trick winners, every scoring case including bags, Nil and Blind Nil, and computer players finishing whole games; 100 random games checking card and trick counts; and a socket test.
 - **Catan** (`npm run test:catan`): targeted rule checks, dozens of full random games on both boards with invariants checked after every action, a game played entirely by timeouts, and a socket test.

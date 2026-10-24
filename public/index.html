@@ -7,7 +7,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎲</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Cinzel:wght@900&family=Bungee&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Cinzel:wght@900&family=Bungee&family=Playfair+Display:wght@900&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root { --bg: #0a0b14; --text: #eef0ff; --muted: #9aa0c3; --line: #262a45; }
     * { box-sizing: border-box; }
@@ -84,6 +84,17 @@
     .spin:hover #spinwheel .w { transform: rotate(400deg); }
     .ptr { fill: #fff; }
 
+    /* spades card */
+    .spades .art { background: radial-gradient(ellipse at 50% 45%, #1d7a4e 0%, #145a3a 50%, #0c3b26 100%); box-shadow: inset 0 0 0 8px #4a2a14; }
+    .spades h2 { font: 900 26px 'Playfair Display', serif; color: #f4d27a; text-shadow: 0 2px 0 #5a3d0c; }
+    .spades:hover { box-shadow: 0 24px 60px #f4d27a26, 0 0 0 1px #f4d27a55; }
+    .spades .play { background: linear-gradient(180deg, #ffe3a0, #f4d27a 50%, #d9a93c); color: #2b1d05; }
+    .sfan { position: relative; width: 180px; height: 140px; }
+    .sc { position: absolute; left: 50%; top: 50%; width: 64px; height: 92px; margin: -46px 0 0 -32px; border-radius: 8px; background: #fbf7ee; box-shadow: 0 8px 18px #000a;
+      display: grid; place-items: center; font-size: 40px; color: #161616; transform: rotate(var(--r)) translate(var(--x), var(--y)); transition: transform .3s; }
+    .sc b { position: absolute; top: 4px; left: 6px; font: 800 15px 'Outfit', sans-serif; }
+    .spades:hover .sc { transform: rotate(calc(var(--r) * 1.4)) translate(calc(var(--x) * 1.3), var(--y)); }
+
     footer { margin-top: 40px; color: var(--muted); font-size: 14px; text-align: center; }
     @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
   </style>
@@ -140,6 +151,19 @@
         <p>Classic UNO plus the Spin wheel: War, Trade Hands, Almost UNO, the UNO Spin race and more. Classic or new wheel, first to 500 wins.</p>
         <div class="meta"><span>2–10 players</span><span>Cards</span></div>
         <span class="play">Play UNO Spin →</span>
+      </div>
+    </a>
+    <a class="game spades" href="/spades/">
+      <div class="art"><div class="sfan">
+        <div class="sc" style="--r:-18deg;--x:-40px;--y:6px"><b>K</b>♠</div>
+        <div class="sc" style="--r:0deg;--x:0px;--y:-4px;color:#d0283a"><b>A</b>♥</div>
+        <div class="sc" style="--r:18deg;--x:40px;--y:6px"><b>A</b>♠</div>
+      </div></div>
+      <div class="info">
+        <h2>Spades</h2>
+        <p>The partnership classic: bid your tricks, go Nil if you dare, and trump with spades. Fill empty seats with computer players.</p>
+        <div class="meta"><span>4 players (bots fill in)</span><span>Cards</span></div>
+        <span class="play">Play Spades →</span>
       </div>
     </a>
   </main>

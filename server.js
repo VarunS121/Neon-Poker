@@ -9,6 +9,7 @@ const GAMES = {
   catan: require('./games/catan'),
   uno: require('./games/uno'),
   spin: require('./games/spin'),
+  spades: require('./games/spades'),
 };
 
 const PORT = process.env.PORT || 3000;
