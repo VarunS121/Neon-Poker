@@ -7,8 +7,9 @@ Private, real-time games for you and your friends in the browser. There are no a
 | ♠ **Neon Hold'em**: no-limit Texas Hold'em with play chips | 2–9 | `/poker/` |
 | 🏝️ **Catan**: the full base game and the 5–6 player extension | 2–4 or 5–6 | `/catan/` |
 | 🃏 **UNO Show 'Em No Mercy**: the 168-card brutal edition | 2–10 | `/uno/` |
+| 🌀 **UNO Spin**: classic UNO plus the Spin wheel, with the classic or new wheel | 2–10 | `/spin/` |
 
-One Node server runs all three games. The home page at `/` lets you pick a game. Each game has its own rooms, so room codes never mix between games. Invite links from before the merge (`/?room=CODE`) still open the poker table.
+One Node server runs all four games. The home page at `/` lets you pick a game. Each game has its own rooms, so room codes never mix between games. Invite links from before the merge (`/?room=CODE`) still open the poker table.
 
 ## Run it on your computer
 
@@ -76,23 +77,47 @@ The server enforces the official No Mercy rules:
 
 The host can set a turn timer (off, 15–60 seconds). When time runs out, the game takes the penalty or draws and plays for you. Each player receives only their own hand, and the draw pile stays hidden.
 
+## 🌀 UNO Spin
+
+Classic UNO: match color, number or symbol, or draw one card when you can't or won't play. Draw Two makes the next player draw 2 and lose their turn. Wild Draw Four uses the challenge rule: a successful challenge makes the player draw 4, and a failed one makes the challenger draw 6. You call UNO at one card, and the round winner scores the cards left in the other hands. The deck has 112 cards, including 20 Spin cards numbered 1–5 and 4 Wild Spin cards. Playing a Spin card triggers the wheel. The host picks which wheel to use:
+
+- **Classic wheel (2005).** The *next* player spins instead of taking their turn.
+  - **Almost UNO:** discard down to 2 cards.
+  - **Discard Number** and **Discard Color:** discard any number of cards that share one number, or one color.
+  - **Draw Red** and **Draw Blue:** draw until that color or a wild comes up.
+  - **Show Hand:** everyone sees your cards.
+  - **War:** the highest number card is played, and ties go to the next-highest card.
+  - **UNO Spin:** everyone races to hit the button, and the winner discards any one card.
+  - **Trade Hands:** everyone passes their hand to the left.
+- **New wheel (2025).** Whoever played the Spin card spins.
+  - **Color Draw**, one slot per color: draw until that color comes up.
+  - **Wild Color Draw:** pick a color, then draw until it comes up.
+  - **Color Discard:** pick a color and discard all of it.
+  - **Swap Hands:** trade hands with anyone.
+  - **2X:** everyone may play two cards a turn until someone spins.
+
+The wheel lands on a space at random, with every space equally likely. The rules don't give the real wheel's slot sizes, so this is an approximation. The first player to reach the target score (250, 500 or 1000) wins.
+
 ---
 
 ## Project layout
 
 ```
-server.js              Game Night server: home page, static files, routes /poker/ws, /catan/ws and /uno/ws
+server.js              Game Night server: home page, static files, routes /poker/ws, /catan/ws, /uno/ws and /spin/ws
 games/poker.js         Poker rooms and WebSocket handlers
 games/catan.js         Catan rooms and WebSocket handlers
 games/uno.js           UNO rooms and WebSocket handlers
+games/spin.js          UNO Spin rooms and WebSocket handlers
 src/poker/             Hold'em engine (table.js) and hand evaluator (handEval.js, also used in the browser)
 src/catan/             Catan rules engine (game.js) and board generator (board.js)
 src/uno/               UNO No Mercy rules engine (game.js)
+src/spin/              UNO Spin rules engine (game.js), both wheel editions
 public/index.html      Game Night home page
 public/net.js          Small reconnecting WebSocket client shared by both games
 public/poker/          Poker client
 public/catan/          Catan client (art.js holds the SVG artwork)
 public/uno/            UNO client
+public/spin/           UNO Spin client and wheel
 test/                  Tests for each game, plus site routing (site.test.js)
 ```
 
@@ -106,4 +131,5 @@ This runs every game's tests and checks the site routing.
 
 - **Poker** (`npm run test:poker`): hand-evaluator tests, then thousands of random hands at 2–9 players checking that no chips are created or lost, then an end-to-end socket test.
 - **UNO** (`npm run test:uno`): rule checks for every card and rule, hundreds of random rounds at 2–10 players checking that all 168 cards are always accounted for, and a socket test.
+- **UNO Spin** (`npm run test:spin`): rule checks for every wheel space on both wheels, dozens of full games to the target score checking that all 112 cards are always accounted for, and a socket test.
 - **Catan** (`npm run test:catan`): targeted rule checks, dozens of full random games on both boards with invariants checked after every action, a game played entirely by timeouts, and a socket test.

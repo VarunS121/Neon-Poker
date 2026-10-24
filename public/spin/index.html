@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>UNO Spin</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌀</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Home -->
+  <section id="home" class="screen center">
+    <a class="home-link" href="/">← Game Night</a>
+    <div class="card-panel">
+      <div class="logo"><svg class="logo-wheel" viewBox="-50 -50 100 100" aria-hidden="true"></svg><div><span class="u">UNO</span><span class="nm">SPIN</span></div></div>
+      <p class="sub">Classic UNO, plus a wheel that can wreck your hand or save it.</p>
+      <label>Your name <input id="name" maxlength="16" placeholder="e.g. Varun" autocomplete="nickname"></label>
+      <div class="split">
+        <div class="box"><h3>New game</h3><button id="create" class="primary">Create game</button></div>
+        <div class="box"><h3>Join a game</h3><input id="code" maxlength="5" placeholder="CODE" autocomplete="off"><button id="join" class="primary">Join</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Waiting room -->
+  <section id="lobby" class="screen center hidden">
+    <div class="card-panel">
+      <h2>Game <span id="lobby-code" class="code"></span></h2>
+      <button id="invite" class="ghost">🔗 Copy invite link</button>
+      <ul id="lobby-players"></ul>
+      <div id="host-settings">
+        <div class="row"><span>Wheel</span>
+          <div class="seg" id="lobby-edition"><button data-ed="classic">Classic (2005)</button><button data-ed="new">New (2025)</button></div>
+        </div>
+        <p id="edition-note" class="sub"></p>
+        <div class="row"><span>Points to win</span>
+          <div class="seg" id="lobby-target"><button data-t="250">250</button><button data-t="500">500</button><button data-t="1000">1000</button></div>
+        </div>
+        <div class="row"><span>Turn timer</span>
+          <div class="seg" id="lobby-time"><button data-time="0">Off</button><button data-time="15">15s</button><button data-time="30">30s</button><button data-time="45">45s</button><button data-time="60">60s</button></div>
+        </div>
+      </div>
+      <p id="lobby-note" class="sub"></p>
+      <button id="start" class="primary">Start game</button>
+      <button id="leave-lobby" class="ghost">Leave</button>
+    </div>
+  </section>
+
+  <!-- Game -->
+  <section id="game" class="screen hidden">
+    <header class="topbar">
+      <div class="mini-logo"><span class="u">UNO</span><span class="nm">SPIN</span></div>
+      <div class="room">GAME <b id="room-code"></b> <button id="invite2" class="ghost small">Invite</button></div>
+      <div id="round-info" class="round-info"></div>
+      <div class="spacer"></div>
+      <button id="sound" class="ghost small" title="Sound">🔊</button>
+      <button id="leave" class="ghost small">Leave</button>
+    </header>
+    <div class="layout">
+      <main class="table">
+        <div id="opponents" class="opponents"></div>
+        <div class="center">
+          <div id="dir" class="dir"><svg viewBox="0 0 200 200"><defs><marker id="arr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="currentColor"/></marker></defs>
+            <path d="M100 14 A86 86 0 0 1 186 100" marker-end="url(#arr)"/><path d="M100 186 A86 86 0 0 1 14 100" marker-end="url(#arr)"/></svg></div>
+          <div class="piles">
+            <button id="deck" class="deck" title="Draw a card"><div class="ucard back"><span>UNO</span></div><div class="ucard back b2"></div><div class="ucard back b3"></div><span id="deck-count" class="count"></span></button>
+            <div id="discard" class="discard"></div>
+          </div>
+          <div id="badges" class="badges"></div>
+          <div id="wheel-stage" class="wheel-stage hidden">
+            <div class="wheel-box">
+              <div class="pointer"></div>
+              <svg id="wheel" viewBox="-110 -110 220 220"><g id="wheel-rot"></g><circle r="18" class="hub"/></svg>
+            </div>
+            <div id="wheel-result" class="wheel-result"></div>
+            <button id="b-spin" class="primary big hidden">🌀 SPIN!</button>
+          </div>
+          <button id="b-race" class="race hidden">UNO SPIN!</button>
+        </div>
+        <div id="status" class="status"></div>
+        <div id="splash" class="splash"></div>
+        <div class="me">
+          <div class="controls">
+            <button id="b-uno" class="uno-btn">UNO!</button>
+            <button id="b-draw" class="primary">Draw</button>
+            <button id="b-pass">Pass</button>
+            <button id="b-discard" class="primary hidden">Discard</button>
+            <span id="my-count" class="my-count"></span>
+          </div>
+          <div id="hand" class="hand"></div>
+        </div>
+      </main>
+      <aside class="side">
+        <div class="tabs"><button data-tab="log" class="on">Log</button><button data-tab="chat">Chat <span id="chat-badge" class="badge hidden"></span></button><button data-tab="scores">Scores</button><button data-tab="rules">Rules</button></div>
+        <div id="tab-log" class="tab"></div>
+        <div id="tab-chat" class="tab hidden">
+          <div id="chat-list"></div>
+          <form id="chat-form"><input id="chat-input" maxlength="300" placeholder="Say something…" autocomplete="off"><button>Send</button></form>
+        </div>
+        <div id="tab-scores" class="tab hidden"></div>
+        <div id="tab-rules" class="tab hidden rules"></div>
+      </aside>
+    </div>
+  </section>
+
+  <div id="shown" class="shown hidden"></div>
+  <div id="modal" class="modal hidden"><div class="modal-card" id="modal-card"></div></div>
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/net.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

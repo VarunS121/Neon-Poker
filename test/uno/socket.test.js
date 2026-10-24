@@ -35,7 +35,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
   assert.strictEqual(s.phase, 'play');
   assert.strictEqual(s.hand.length, 7);
   assert.strictEqual(s.settings.sevenZero, false);
-  const raw = JSON.stringify(s);
+  const raw = JSON.stringify({ ...s, log: [] }); // log entries have numeric ids too
   for (const c of cs.slice(1)) for (const card of c.state.hand) assert(!raw.includes(`"id":${card.id},`), 'other hands are hidden');
   assert(!('deck' in s), 'the draw pile is hidden');
 

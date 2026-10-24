@@ -27,7 +27,9 @@ const wsOpens = p => new Promise(res => {
   assert((await get('/catan/')).body.includes('<title>Catan Online</title>'), 'catan page');
   assert((await get('/uno/')).body.includes('<title>UNO No Mercy</title>'), 'uno page');
   assert(home.body.includes('href="/uno/"'), 'home links to uno');
-  for (const asset of ['/net.js', '/poker/app.js', '/poker/style.css', '/poker/handEval.js', '/catan/app.js', '/catan/art.js', '/catan/style.css', '/uno/app.js', '/uno/style.css']) {
+  assert((await get('/spin/')).body.includes('<title>UNO Spin</title>'), 'spin page');
+  assert(home.body.includes('href="/spin/"'), 'home links to spin');
+  for (const asset of ['/net.js', '/poker/app.js', '/poker/style.css', '/poker/handEval.js', '/catan/app.js', '/catan/art.js', '/catan/style.css', '/uno/app.js', '/uno/style.css', '/spin/app.js', '/spin/style.css']) {
     const r = await get(asset);
     assert.strictEqual(r.status, 200, asset);
     assert(!r.type.includes('html'), asset + ' should not fall back to a page');
@@ -38,10 +40,11 @@ const wsOpens = p => new Promise(res => {
   assert.deepStrictEqual([old.status, old.location], [302, '/poker/?room=XYZ12'], 'old poker invite links still work');
   assert((await get('/catan/some/deep/link')).body.includes('Catan Online'), 'unknown game paths load that game');
   assert.strictEqual((await get('/../server.js')).body.includes('require('), false, 'no path traversal');
-  assert.deepStrictEqual(JSON.parse((await get('/health')).body), { ok: true, rooms: { poker: 0, catan: 0, uno: 0 } });
+  assert.deepStrictEqual(JSON.parse((await get('/health')).body), { ok: true, rooms: { poker: 0, catan: 0, uno: 0, spin: 0 } });
   assert(await wsOpens('/poker/ws'));
   assert(await wsOpens('/catan/ws'));
   assert(await wsOpens('/uno/ws'));
+  assert(await wsOpens('/spin/ws'));
   assert(!(await wsOpens('/ws')), 'unknown socket path refused');
   console.log('site: pages, assets, redirects, health and socket routing OK');
   srv.kill();
