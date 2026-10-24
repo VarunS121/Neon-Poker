@@ -7,6 +7,7 @@ const http = require('http');
 const GAMES = {
   poker: require('./games/poker'),
   catan: require('./games/catan'),
+  uno: require('./games/uno'),
 };
 
 const PORT = process.env.PORT || 3000;

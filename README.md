@@ -6,8 +6,9 @@ Private, real-time games for you and your friends in the browser. There are no a
 |---|---|---|
 | ♠ **Neon Hold'em**: no-limit Texas Hold'em with play chips | 2–9 | `/poker/` |
 | 🏝️ **Catan**: the full base game and the 5–6 player extension | 2–4 or 5–6 | `/catan/` |
+| 🃏 **UNO Show 'Em No Mercy**: the 168-card brutal edition | 2–10 | `/uno/` |
 
-One Node server runs both games. The home page at `/` lets you pick a game. Each game has its own rooms, so a poker table code and a Catan game code never mix. Invite links from before the merge (`/?room=CODE`) still open the poker table.
+One Node server runs all three games. The home page at `/` lets you pick a game. Each game has its own rooms, so room codes never mix between games. Invite links from before the merge (`/?room=CODE`) still open the poker table.
 
 ## Run it on your computer
 
@@ -60,20 +61,38 @@ The server enforces the official rules:
 
 The host can set the points to win (8–14), a turn timer (off, or 1–5 minutes, with automatic moves when time runs out), the discard limit, and whether the bank's card counts are hidden. The board uses hand-drawn SVG art and animations, and the game works on phones.
 
+## 🃏 UNO No Mercy
+
+The server enforces the official No Mercy rules:
+
+- **Deck.** 168 cards: numbers, Skip, Reverse, Draw 2, Draw 4, Skip Everyone and Discard All in four colors, plus Wild Reverse Draw 4, Wild Draw 6, Wild Draw 10 and Wild Color Roulette.
+- **Stacking.** On a draw card you can stack any draw card of equal or higher value (+2 → +4 → +6 → +10). Whoever can't stack takes the whole pile and loses their turn.
+- **Can't play?** Draw until you can, then play that card or pass.
+- **Action cards.** Skip Everyone lets you go again. Discard All also discards every other card of that color in your hand. With Color Roulette, the next player names a color and flips cards until it comes up, keeping every card they flip.
+- **7–0 rule** (the host can turn it off). A 7 swaps hands with a player you choose; a 0 passes every hand to the next player.
+- **Mercy rule.** Anyone holding 25 or more cards is knocked out of the round.
+- **UNO!** Call it when you're down to one card. Until the next player moves, anyone can catch you for +2.
+- **Winning.** Empty your hand, or be the last player standing. Wins are tallied across rounds, and players can join between rounds.
+
+The host can set a turn timer (off, 15–60 seconds). When time runs out, the game takes the penalty or draws and plays for you. Each player receives only their own hand, and the draw pile stays hidden.
+
 ---
 
 ## Project layout
 
 ```
-server.js              Game Night server: home page, static files, routes /poker/ws and /catan/ws
+server.js              Game Night server: home page, static files, routes /poker/ws, /catan/ws and /uno/ws
 games/poker.js         Poker rooms and WebSocket handlers
 games/catan.js         Catan rooms and WebSocket handlers
+games/uno.js           UNO rooms and WebSocket handlers
 src/poker/             Hold'em engine (table.js) and hand evaluator (handEval.js, also used in the browser)
 src/catan/             Catan rules engine (game.js) and board generator (board.js)
+src/uno/               UNO No Mercy rules engine (game.js)
 public/index.html      Game Night home page
 public/net.js          Small reconnecting WebSocket client shared by both games
 public/poker/          Poker client
 public/catan/          Catan client (art.js holds the SVG artwork)
+public/uno/            UNO client
 test/                  Tests for each game, plus site routing (site.test.js)
 ```
 
@@ -83,7 +102,8 @@ test/                  Tests for each game, plus site routing (site.test.js)
 npm test
 ```
 
-This runs both games' tests and checks the site routing.
+This runs every game's tests and checks the site routing.
 
 - **Poker** (`npm run test:poker`): hand-evaluator tests, then thousands of random hands at 2–9 players checking that no chips are created or lost, then an end-to-end socket test.
+- **UNO** (`npm run test:uno`): rule checks for every card and rule, hundreds of random rounds at 2–10 players checking that all 168 cards are always accounted for, and a socket test.
 - **Catan** (`npm run test:catan`): targeted rule checks, dozens of full random games on both boards with invariants checked after every action, a game played entirely by timeouts, and a socket test.

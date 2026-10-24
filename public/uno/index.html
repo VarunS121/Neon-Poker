@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>UNO No Mercy</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🃏</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Home: create or join -->
+  <section id="home" class="screen center">
+    <a class="home-link" href="/">← Game Night</a>
+    <div class="card-panel">
+      <div class="logo"><span class="u">UNO</span><span class="nm">NO MERCY</span></div>
+      <p class="sub">168 cards. Stack them. Swap hands. Hit 25 and you're out.</p>
+      <label>Your name <input id="name" maxlength="16" placeholder="e.g. Varun" autocomplete="nickname"></label>
+      <div class="split">
+        <div class="box">
+          <h3>New game</h3>
+          <button id="create" class="primary">Create game</button>
+        </div>
+        <div class="box">
+          <h3>Join a game</h3>
+          <input id="code" maxlength="5" placeholder="CODE" autocomplete="off">
+          <button id="join" class="primary">Join</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Waiting room -->
+  <section id="lobby" class="screen center hidden">
+    <div class="card-panel">
+      <h2>Game <span id="lobby-code" class="code"></span></h2>
+      <button id="invite" class="ghost">🔗 Copy invite link</button>
+      <ul id="lobby-players"></ul>
+      <div id="host-settings">
+        <div class="row"><span>Turn timer</span>
+          <div class="seg" id="lobby-time"><button data-time="0">Off</button><button data-time="15">15s</button><button data-time="30">30s</button><button data-time="45">45s</button><button data-time="60">60s</button></div>
+        </div>
+        <div class="row"><span>7–0 rule <small>(7 swaps hands, 0 passes them on)</small></span>
+          <div class="seg" id="lobby-70"><button data-on="1">On</button><button data-on="0">Off</button></div>
+        </div>
+      </div>
+      <p id="lobby-note" class="sub"></p>
+      <button id="start" class="primary">Start game</button>
+      <button id="leave-lobby" class="ghost">Leave</button>
+    </div>
+  </section>
+
+  <!-- Game -->
+  <section id="game" class="screen hidden">
+    <header class="topbar">
+      <div class="mini-logo"><span class="u">UNO</span><span class="nm">NO MERCY</span></div>
+      <div class="room">GAME <b id="room-code"></b> <button id="invite2" class="ghost small">Invite</button></div>
+      <div class="spacer"></div>
+      <button id="sound" class="ghost small" title="Sound">🔊</button>
+      <button id="leave" class="ghost small">Leave</button>
+    </header>
+    <div class="layout">
+      <main class="table">
+        <div id="opponents" class="opponents"></div>
+        <div class="center">
+          <div id="dir" class="dir"><svg viewBox="0 0 200 200"><defs><marker id="arr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="currentColor"/></marker></defs>
+            <path d="M100 14 A86 86 0 0 1 186 100" marker-end="url(#arr)"/><path d="M100 186 A86 86 0 0 1 14 100" marker-end="url(#arr)"/></svg></div>
+          <div class="piles">
+            <button id="deck" class="deck" title="Draw"><div class="ucard back"><span>UNO</span></div><div class="ucard back b2"></div><div class="ucard back b3"></div><span id="deck-count" class="count"></span></button>
+            <div id="discard" class="discard"></div>
+          </div>
+          <div id="pending" class="pending hidden"></div>
+        </div>
+        <div id="status" class="status"></div>
+        <div id="splash" class="splash"></div>
+        <div class="me">
+          <div class="controls">
+            <button id="b-uno" class="uno-btn">UNO!</button>
+            <button id="b-draw" class="primary">Draw</button>
+            <button id="b-pass">Pass</button>
+            <span id="my-count" class="my-count"></span>
+          </div>
+          <div id="hand" class="hand"></div>
+        </div>
+      </main>
+      <aside class="side">
+        <div class="tabs"><button data-tab="log" class="on">Log</button><button data-tab="chat">Chat <span id="chat-badge" class="badge hidden"></span></button><button data-tab="rules">Rules</button></div>
+        <div id="tab-log" class="tab"></div>
+        <div id="tab-chat" class="tab hidden">
+          <div id="chat-list"></div>
+          <form id="chat-form"><input id="chat-input" maxlength="300" placeholder="Talk trash…" autocomplete="off"><button>Send</button></form>
+        </div>
+        <div id="tab-rules" class="tab hidden rules">
+          <p><b>Match</b> the color, number or symbol. Wilds go on anything.</p>
+          <p><b>Stacking:</b> on a draw card you may stack any draw card of <b>equal or higher</b> value (+2 → +4 → +6 → +10). If you can't, you take the whole pile and lose your turn.</p>
+          <p><b>Can't play?</b> Draw until you can. Then play that card or pass.</p>
+          <p><b>Skip Everyone:</b> you go again. <b>Discard All:</b> also discard every card of that color. <b>Color Roulette:</b> the next player names a color and flips until it shows, keeping every card.</p>
+          <p><b>7–0:</b> a 7 swaps hands with anyone; a 0 passes every hand to the next player.</p>
+          <p><b>Mercy rule:</b> 25 cards and you're out. Win by emptying your hand, or by being the last one standing.</p>
+          <p><b>UNO!</b> Call it at one card, or anyone can catch you for +2.</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <div id="modal" class="modal hidden"><div class="modal-card" id="modal-card"></div></div>
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/net.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

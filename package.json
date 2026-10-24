@@ -1,13 +1,14 @@
 {
   "name": "game-night",
   "version": "2.0.0",
-  "description": "Private real-time games for you and your friends: Neon Hold'em poker and Catan",
+  "description": "Private real-time games for you and your friends: Neon Hold'em poker, Catan and UNO No Mercy",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "npm run test:poker && npm run test:catan && node test/site.test.js",
+    "test": "npm run test:poker && npm run test:catan && npm run test:uno && node test/site.test.js",
     "test:poker": "node test/poker/handEval.test.js && node test/poker/sim.js && node test/poker/socket.test.js",
-    "test:catan": "node test/catan/rules.test.js && node test/catan/sim.js && node test/catan/socket.test.js"
+    "test:catan": "node test/catan/rules.test.js && node test/catan/sim.js && node test/catan/socket.test.js",
+    "test:uno": "node test/uno/rules.test.js && node test/uno/sim.js && node test/uno/socket.test.js"
   },
   "engines": {
     "node": ">=18"
