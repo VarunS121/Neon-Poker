@@ -16,7 +16,7 @@
   }
   let myName = LS.get('nh_name', '');
 
-  const socket = new Net('/ws'); window.__net = socket;
+  const socket = new Net('/poker/ws'); window.__net = socket;
   let state = null, prev = null, roomCode = null;
   let turnDeadline = 0, turnTotal = 0, nextHandAt = 0, warnedTurn = null;
   let raiseKey = null, unread = 0, portrait = false;
@@ -183,7 +183,7 @@
   function backToLobby() {
     roomCode = null; state = null; prev = null;
     LS.del('nh_room');
-    history.replaceState(null, '', '/');
+    history.replaceState(null, '', '/poker/');
     $('#game').classList.add('hidden');
     $('#lobby').classList.remove('hidden');
     $('#messages').innerHTML = '';
@@ -191,7 +191,7 @@
 
   // ---------- top bar ----------
   $('#copyLink').addEventListener('click', async () => {
-    const link = location.origin + '/?room=' + roomCode;
+    const link = location.origin + '/poker/?room=' + roomCode;
     try { await navigator.clipboard.writeText(link); toast('Invite link copied — send it to your friends'); }
     catch { window.prompt('Copy this invite link:', link); }
   });

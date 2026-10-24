@@ -1,11 +1,13 @@
 {
-  "name": "neon-holdem",
-  "version": "1.0.0",
-  "description": "Private real-time Texas Hold'em for you and your friends",
+  "name": "game-night",
+  "version": "2.0.0",
+  "description": "Private real-time games for you and your friends: Neon Hold'em poker and Catan",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "node test/handEval.test.js && node test/sim.js && node test/socket.test.js"
+    "test": "npm run test:poker && npm run test:catan && node test/site.test.js",
+    "test:poker": "node test/poker/handEval.test.js && node test/poker/sim.js && node test/poker/socket.test.js",
+    "test:catan": "node test/catan/rules.test.js && node test/catan/sim.js && node test/catan/socket.test.js"
   },
   "engines": {
     "node": ">=18"

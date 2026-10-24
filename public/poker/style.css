@@ -1,3 +1,6 @@
+.home-link { position: absolute; top: 16px; left: 18px; z-index: 3; color: var(--text); opacity: .7; text-decoration: none; font-weight: 600; font-size: 14px; }
+.home-link:hover { opacity: 1; color: var(--cyan); }
+
 :root {
   --bg: #06060d;
   --bg2: #0c0c1a;

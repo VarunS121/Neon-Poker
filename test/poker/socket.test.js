@@ -4,13 +4,13 @@ const { spawn } = require('child_process');
 const WebSocket = require('ws');
 
 const PORT = 3999;
-const srv = spawn(process.execPath, ['server.js'], { env: { ...process.env, PORT }, stdio: 'pipe' });
+const srv = spawn(process.execPath, [require('path').join(__dirname, '..', '..', 'server.js')], { env: { ...process.env, PORT }, stdio: 'pipe' });
 const url = `http://localhost:${PORT}`;
 const wait = ms => new Promise(r => setTimeout(r, ms));
 const emit = (s, ev, data) => new Promise(r => s.emit(ev, data, r));
 
 function client() {
-  const ws = new WebSocket(`ws://localhost:${PORT}/ws`);
+  const ws = new WebSocket(`ws://localhost:${PORT}/poker/ws`);
   const s = { ws, last: null, chats: [], acks: {}, id: 1 };
   s.ready = new Promise(r => ws.on('open', r));
   ws.on('message', raw => {

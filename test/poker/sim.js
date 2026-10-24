@@ -1,6 +1,6 @@
 // Engine stress test: random bots play many hands; checks chip conservation and rule invariants.
 const assert = require('assert');
-const { Table } = require('../src/table');
+const { Table } = require('../../src/poker/table');
 
 // Make timers instant so the sim runs fast.
 const queue = [];

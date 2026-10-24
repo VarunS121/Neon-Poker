@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Neon Hold'em</title>
+  <meta name="theme-color" content="#07070f" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♠</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Unbounded:wght@600;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/poker/style.css" />
+</head>
+<body>
+  <div class="bg"><div class="bg-grid"></div><div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div></div>
+
+  <!-- LOBBY -->
+  <section id="lobby" class="screen">
+    <a class="home-link" href="/">← Game Night</a>
+    <div class="brand">
+      <div class="logo-mark"><span>♠</span></div>
+      <h1>NEON <em>HOLD'EM</em></h1>
+      <p>Private no-limit Texas Hold'em tables for you and your friends. Play chips only.</p>
+    </div>
+
+    <div class="lobby-grid">
+      <form id="createForm" class="panel glass" autocomplete="off">
+        <h2><span class="dot pink"></span>Create a table</h2>
+        <label class="field"><span>Your name</span><input id="createName" maxlength="16" placeholder="e.g. Maverick" required /></label>
+        <div class="field-row">
+          <label class="field"><span>Blinds</span>
+            <select id="blinds">
+              <option value="5/10">5 / 10</option>
+              <option value="10/20" selected>10 / 20</option>
+              <option value="25/50">25 / 50</option>
+              <option value="50/100">50 / 100</option>
+              <option value="100/200">100 / 200</option>
+            </select>
+          </label>
+          <label class="field"><span>Starting stack</span>
+            <select id="stack">
+              <option value="50">50 big blinds</option>
+              <option value="100" selected>100 big blinds</option>
+              <option value="200">200 big blinds</option>
+            </select>
+          </label>
+        </div>
+        <div class="field"><span>Turn timer</span>
+          <div class="seg" id="timerSeg">
+            <button type="button" data-v="15">15s</button>
+            <button type="button" data-v="30" class="on">30s</button>
+            <button type="button" data-v="60">60s</button>
+            <button type="button" data-v="0">Off</button>
+          </div>
+        </div>
+        <button class="btn primary big" type="submit">Create table</button>
+      </form>
+
+      <form id="joinForm" class="panel glass" autocomplete="off">
+        <h2><span class="dot cyan"></span>Join a table</h2>
+        <label class="field"><span>Your name</span><input id="joinName" maxlength="16" placeholder="e.g. Ace" required /></label>
+        <label class="field"><span>Table code</span><input id="joinCode" maxlength="5" class="code-input" placeholder="ABCDE" required /></label>
+        <button class="btn cyan big" type="submit">Join table</button>
+        <p class="hint">Got an invite link? Open it and the code fills in for you.</p>
+      </form>
+    </div>
+    <footer class="lobby-foot">Up to 9 players · Real-time · No sign-up</footer>
+  </section>
+
+  <!-- GAME -->
+  <section id="game" class="screen hidden">
+    <header class="topbar">
+      <div class="brand-sm"><span class="logo-mini">♠</span><b>NEON</b> HOLD'EM</div>
+      <div class="room-chip">
+        <span class="lbl">Table</span><b id="roomCode">-----</b>
+        <button id="copyLink" class="chip-btn" title="Copy invite link">
+          <svg viewBox="0 0 24 24" width="15" height="15"><path fill="currentColor" d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"/></svg>
+          <span>Invite</span>
+        </button>
+      </div>
+      <div class="meta" id="blindsInfo"></div>
+      <div class="top-actions">
+        <button id="soundBtn" class="icon-btn" title="Toggle sound">🔊</button>
+        <button id="sitBtn" class="ghost-btn">Sit out</button>
+        <button id="rebuyBtn" class="ghost-btn pink hidden">Rebuy</button>
+        <button id="chatToggle" class="icon-btn mobile-only" title="Chat">💬<i id="chatBadge" class="badge-dot hidden"></i></button>
+        <button id="leaveBtn" class="ghost-btn">Leave</button>
+      </div>
+    </header>
+
+    <main class="game-main">
+      <div class="table-area" id="tableArea">
+        <div class="table" id="table">
+          <div class="felt">
+            <div class="felt-inner"></div>
+            <div class="felt-logo">NEON HOLD'EM</div>
+          </div>
+          <div class="center">
+            <div class="pot" id="pot"></div>
+            <div class="board" id="board"></div>
+            <div class="center-msg" id="centerMsg"></div>
+          </div>
+          <div id="seats"></div>
+          <div id="bets"></div>
+          <div class="dealer-btn hidden" id="dealerBtn">D</div>
+          <div id="fxLayer"></div>
+        </div>
+      </div>
+
+      <aside class="sidebar glass" id="sidebar">
+        <div class="tabs">
+          <button data-tab="chat" class="on">Chat & log</button>
+          <button data-tab="standings">Standings</button>
+          <button class="close-side mobile-only" id="closeSide">✕</button>
+        </div>
+        <div class="tab-body" id="chatTab">
+          <div class="messages" id="messages"></div>
+          <div class="emoji-bar" id="emojiBar"></div>
+          <form id="chatForm" class="chat-form" autocomplete="off">
+            <input id="chatInput" placeholder="Talk some trash…" maxlength="300" />
+            <button class="btn primary sm" type="submit">Send</button>
+          </form>
+        </div>
+        <div class="tab-body hidden" id="standingsTab">
+          <table class="standings"><thead><tr><th>Player</th><th>Stack</th><th>Buy-ins</th><th>Net</th></tr></thead><tbody id="standings"></tbody></table>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="action-bar" id="actionBar">
+      <div class="my-hand" id="myHand"></div>
+      <div class="actions hidden" id="actions">
+        <button class="act fold" id="foldBtn"><span>Fold</span><kbd>F</kbd></button>
+        <button class="act call" id="callBtn"><span>Check</span><kbd>C</kbd></button>
+        <div class="raise-box" id="raiseBox">
+          <div class="presets">
+            <button data-p="min">Min</button>
+            <button data-p="0.5">½ Pot</button>
+            <button data-p="0.75">¾ Pot</button>
+            <button data-p="1">Pot</button>
+            <button data-p="all">All-in</button>
+          </div>
+          <div class="slider-row">
+            <button class="step" data-step="-1">−</button>
+            <input type="range" id="raiseRange" />
+            <button class="step" data-step="1">+</button>
+            <input type="number" id="raiseInput" inputmode="numeric" />
+          </div>
+        </div>
+        <button class="act raise" id="raiseBtn"><span>Raise</span><kbd>R</kbd></button>
+      </div>
+      <div class="status-box" id="statusBox"></div>
+    </footer>
+  </section>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="/net.js"></script>
+  <script src="/poker/handEval.js"></script>
+  <script src="/poker/app.js"></script>
+</body>
+</html>

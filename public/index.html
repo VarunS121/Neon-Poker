@@ -1,161 +1,117 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Neon Hold'em</title>
-  <meta name="theme-color" content="#07070f" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♠</text></svg>" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Unbounded:wght@600;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/style.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Game Night</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎲</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Cinzel:wght@900&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #0a0b14; --text: #eef0ff; --muted: #9aa0c3; --line: #262a45; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      background: radial-gradient(900px 600px at 15% -10%, #2a1640 0%, transparent 60%), radial-gradient(900px 700px at 100% 110%, #10324a 0%, transparent 60%), var(--bg);
+      color: var(--text); font: 16px/1.45 'Outfit', system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 48px 16px 32px;
+    }
+    header { text-align: center; margin-bottom: 36px; }
+    h1 { font: 800 clamp(40px, 8vw, 68px)/1 'Unbounded', sans-serif; margin: 0; letter-spacing: -1px;
+      background: linear-gradient(90deg, #ff5fb0, #ffd27a 50%, #4fd8ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    header p { color: var(--muted); margin: 12px 0 0; font-size: 18px; }
+    .games { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 380px)); gap: 24px; justify-content: center; width: 100%; max-width: 820px; }
+    .game { position: relative; display: flex; flex-direction: column; border-radius: 22px; overflow: hidden; text-decoration: none; color: var(--text);
+      border: 1px solid var(--line); background: #121427; box-shadow: 0 20px 50px #0009; transition: transform .2s, box-shadow .2s; }
+    .game:hover, .game:focus-visible { transform: translateY(-6px); outline: none; }
+    .art { height: 220px; display: grid; place-items: center; position: relative; overflow: hidden; }
+    .info { padding: 18px 20px 22px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+    .info h2 { margin: 0; font-size: 24px; }
+    .info p { margin: 0; color: var(--muted); flex: 1; }
+    .meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .meta span { font-size: 13px; padding: 3px 10px; border-radius: 99px; background: #ffffff10; border: 1px solid #ffffff18; }
+    .play { margin-top: 14px; align-self: flex-start; font-weight: 700; padding: 10px 22px; border-radius: 12px; }
+
+    /* poker card: neon */
+    .poker .art { background: radial-gradient(circle at 50% 120%, #ff2d9555, transparent 60%), radial-gradient(circle at 50% -20%, #00e5ff44, transparent 60%), #080812; }
+    .poker h2 { font-family: 'Unbounded', sans-serif; font-weight: 800; letter-spacing: .5px; }
+    .poker h2 em { font-style: normal; color: #ff2d95; text-shadow: 0 0 14px #ff2d95aa; }
+    .poker:hover { box-shadow: 0 24px 60px #ff2d9533, 0 0 0 1px #ff2d9566; }
+    .poker .play { background: linear-gradient(90deg, #ff2d95, #b14bff); color: #fff; box-shadow: 0 0 18px #ff2d9577; }
+    .cards { position: relative; width: 170px; height: 150px; }
+    .pc { position: absolute; left: 50%; top: 50%; width: 82px; height: 116px; margin: -58px 0 0 -41px; border-radius: 10px; background: #fbfbff;
+      box-shadow: 0 10px 24px #000a; display: flex; flex-direction: column; justify-content: space-between; padding: 7px 9px; font: 800 22px/1 'Outfit', sans-serif; transition: transform .3s; }
+    .pc b { font-size: 40px; align-self: center; }
+    .pc.a { transform: rotate(-14deg) translate(-34px, 6px); color: #111; }
+    .pc.b { transform: rotate(10deg) translate(30px, 4px); color: #e0154f; }
+    .poker:hover .pc.a { transform: rotate(-20deg) translate(-46px, 2px); }
+    .poker:hover .pc.b { transform: rotate(16deg) translate(42px, 0); }
+    .chip { position: absolute; bottom: 18px; width: 38px; height: 38px; border-radius: 50%; border: 6px dashed #fff; box-shadow: 0 0 14px currentColor; }
+    .chip.c1 { left: 26%; background: #ff2d95; color: #ff2d95; } .chip.c2 { right: 26%; background: #00b8d4; color: #00e5ff; bottom: 24px; }
+
+    /* catan card: island */
+    .catan .art { background: radial-gradient(ellipse at center, #3f9ad0 0%, #21679a 60%, #143f62 100%); }
+    .catan h2 { font-family: 'Cinzel', serif; font-weight: 900; color: #f2b544; }
+    .catan:hover { box-shadow: 0 24px 60px #f2b54433, 0 0 0 1px #f2b54466; }
+    .catan .play { background: linear-gradient(180deg, #ffd27a, #f2b544 45%, #e0872a); color: #2a1a04; }
+    #island { width: 200px; height: 200px; transition: transform .4s; }
+    .catan:hover #island { transform: rotate(-6deg) scale(1.05); }
+    .num { font: 900 12px 'Cinzel', serif; text-anchor: middle; fill: #2b2216; } .num.red { fill: #c0281f; }
+
+    footer { margin-top: 40px; color: var(--muted); font-size: 14px; text-align: center; }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  </style>
 </head>
 <body>
-  <div class="bg"><div class="bg-grid"></div><div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div></div>
+  <header>
+    <h1>Game Night</h1>
+    <p>Private games with your friends. No accounts, just share a link.</p>
+  </header>
 
-  <!-- LOBBY -->
-  <section id="lobby" class="screen">
-    <div class="brand">
-      <div class="logo-mark"><span>♠</span></div>
-      <h1>NEON <em>HOLD'EM</em></h1>
-      <p>Private no-limit Texas Hold'em tables for you and your friends. Play chips only.</p>
-    </div>
-
-    <div class="lobby-grid">
-      <form id="createForm" class="panel glass" autocomplete="off">
-        <h2><span class="dot pink"></span>Create a table</h2>
-        <label class="field"><span>Your name</span><input id="createName" maxlength="16" placeholder="e.g. Maverick" required /></label>
-        <div class="field-row">
-          <label class="field"><span>Blinds</span>
-            <select id="blinds">
-              <option value="5/10">5 / 10</option>
-              <option value="10/20" selected>10 / 20</option>
-              <option value="25/50">25 / 50</option>
-              <option value="50/100">50 / 100</option>
-              <option value="100/200">100 / 200</option>
-            </select>
-          </label>
-          <label class="field"><span>Starting stack</span>
-            <select id="stack">
-              <option value="50">50 big blinds</option>
-              <option value="100" selected>100 big blinds</option>
-              <option value="200">200 big blinds</option>
-            </select>
-          </label>
-        </div>
-        <div class="field"><span>Turn timer</span>
-          <div class="seg" id="timerSeg">
-            <button type="button" data-v="15">15s</button>
-            <button type="button" data-v="30" class="on">30s</button>
-            <button type="button" data-v="60">60s</button>
-            <button type="button" data-v="0">Off</button>
-          </div>
-        </div>
-        <button class="btn primary big" type="submit">Create table</button>
-      </form>
-
-      <form id="joinForm" class="panel glass" autocomplete="off">
-        <h2><span class="dot cyan"></span>Join a table</h2>
-        <label class="field"><span>Your name</span><input id="joinName" maxlength="16" placeholder="e.g. Ace" required /></label>
-        <label class="field"><span>Table code</span><input id="joinCode" maxlength="5" class="code-input" placeholder="ABCDE" required /></label>
-        <button class="btn cyan big" type="submit">Join table</button>
-        <p class="hint">Got an invite link? Open it and the code fills in for you.</p>
-      </form>
-    </div>
-    <footer class="lobby-foot">Up to 9 players · Real-time · No sign-up</footer>
-  </section>
-
-  <!-- GAME -->
-  <section id="game" class="screen hidden">
-    <header class="topbar">
-      <div class="brand-sm"><span class="logo-mini">♠</span><b>NEON</b> HOLD'EM</div>
-      <div class="room-chip">
-        <span class="lbl">Table</span><b id="roomCode">-----</b>
-        <button id="copyLink" class="chip-btn" title="Copy invite link">
-          <svg viewBox="0 0 24 24" width="15" height="15"><path fill="currentColor" d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"/></svg>
-          <span>Invite</span>
-        </button>
+  <main class="games">
+    <a class="game poker" href="/poker/">
+      <div class="art">
+        <div class="cards"><div class="pc a">A<b>♠</b></div><div class="pc b">K<b>♥</b></div></div>
+        <i class="chip c1"></i><i class="chip c2"></i>
       </div>
-      <div class="meta" id="blindsInfo"></div>
-      <div class="top-actions">
-        <button id="soundBtn" class="icon-btn" title="Toggle sound">🔊</button>
-        <button id="sitBtn" class="ghost-btn">Sit out</button>
-        <button id="rebuyBtn" class="ghost-btn pink hidden">Rebuy</button>
-        <button id="chatToggle" class="icon-btn mobile-only" title="Chat">💬<i id="chatBadge" class="badge-dot hidden"></i></button>
-        <button id="leaveBtn" class="ghost-btn">Leave</button>
+      <div class="info">
+        <h2>NEON <em>HOLD'EM</em></h2>
+        <p>No-limit Texas Hold'em with side pots, a turn timer, chat and emoji reactions. Play chips only.</p>
+        <div class="meta"><span>2–9 players</span><span>Cards</span></div>
+        <span class="play">Play poker →</span>
       </div>
-    </header>
+    </a>
 
-    <main class="game-main">
-      <div class="table-area" id="tableArea">
-        <div class="table" id="table">
-          <div class="felt">
-            <div class="felt-inner"></div>
-            <div class="felt-logo">NEON HOLD'EM</div>
-          </div>
-          <div class="center">
-            <div class="pot" id="pot"></div>
-            <div class="board" id="board"></div>
-            <div class="center-msg" id="centerMsg"></div>
-          </div>
-          <div id="seats"></div>
-          <div id="bets"></div>
-          <div class="dealer-btn hidden" id="dealerBtn">D</div>
-          <div id="fxLayer"></div>
-        </div>
+    <a class="game catan" href="/catan/">
+      <div class="art"><svg id="island" viewBox="-120 -120 240 240" aria-hidden="true"></svg></div>
+      <div class="info">
+        <h2>Catan</h2>
+        <p>Settle the island: trade, build roads and cities, and outwit the robber, with the full official rules.</p>
+        <div class="meta"><span>2–4 or 5–6 players</span><span>Board game</span></div>
+        <span class="play">Play Catan →</span>
       </div>
+    </a>
+  </main>
 
-      <aside class="sidebar glass" id="sidebar">
-        <div class="tabs">
-          <button data-tab="chat" class="on">Chat & log</button>
-          <button data-tab="standings">Standings</button>
-          <button class="close-side mobile-only" id="closeSide">✕</button>
-        </div>
-        <div class="tab-body" id="chatTab">
-          <div class="messages" id="messages"></div>
-          <div class="emoji-bar" id="emojiBar"></div>
-          <form id="chatForm" class="chat-form" autocomplete="off">
-            <input id="chatInput" placeholder="Talk some trash…" maxlength="300" />
-            <button class="btn primary sm" type="submit">Send</button>
-          </form>
-        </div>
-        <div class="tab-body hidden" id="standingsTab">
-          <table class="standings"><thead><tr><th>Player</th><th>Stack</th><th>Buy-ins</th><th>Net</th></tr></thead><tbody id="standings"></tbody></table>
-        </div>
-      </aside>
-    </main>
+  <footer>Pick a game, create a room, and send the invite link to your friends.</footer>
 
-    <footer class="action-bar" id="actionBar">
-      <div class="my-hand" id="myHand"></div>
-      <div class="actions hidden" id="actions">
-        <button class="act fold" id="foldBtn"><span>Fold</span><kbd>F</kbd></button>
-        <button class="act call" id="callBtn"><span>Check</span><kbd>C</kbd></button>
-        <div class="raise-box" id="raiseBox">
-          <div class="presets">
-            <button data-p="min">Min</button>
-            <button data-p="0.5">½ Pot</button>
-            <button data-p="0.75">¾ Pot</button>
-            <button data-p="1">Pot</button>
-            <button data-p="all">All-in</button>
-          </div>
-          <div class="slider-row">
-            <button class="step" data-step="-1">−</button>
-            <input type="range" id="raiseRange" />
-            <button class="step" data-step="1">+</button>
-            <input type="number" id="raiseInput" inputmode="numeric" />
-          </div>
-        </div>
-        <button class="act raise" id="raiseBtn"><span>Raise</span><kbd>R</kbd></button>
-      </div>
-      <div class="status-box" id="statusBox"></div>
-    </footer>
-  </section>
-
-  <div id="toast" class="toast"></div>
-
-  <script src="/net.js"></script>
-  <script src="/shared/handEval.js"></script>
-  <script src="/app.js"></script>
+  <script src="/catan/art.js"></script>
+  <script>
+    // a little Catan island drawn with the game's own tiles
+    (function () {
+      const q = Math.sqrt(3), L = 40;
+      const tiles = [[0, 0, 'desert'], [q, 0, 'wheat', 6], [-q, 0, 'sheep', 9], [q / 2, -1.5, 'wood', 8], [-q / 2, -1.5, 'ore', 5], [q / 2, 1.5, 'brick', 10], [-q / 2, 1.5, 'sheep', 4]];
+      let out = `<g filter="url(#f-shadow)"><circle r="${L * 2.75}" fill="#d9c38a"/></g><circle r="${L * 2.6}" fill="#efdfb0"/>`;
+      for (const [x, y, t, n] of tiles) {
+        const cx = x * L, cy = y * L;
+        out += `<use href="#t-${t}" x="${cx - L}" y="${cy - L}" width="${2 * L}" height="${2 * L}"/>`;
+        if (n) out += `<circle cx="${cx}" cy="${cy}" r="11" fill="url(#g-token)"/><text x="${cx}" y="${cy + 4}" class="num${n === 6 || n === 8 ? ' red' : ''}">${n}</text>`;
+      }
+      out += `<use href="#p-robber" x="-12" y="-22" width="24" height="36"/>`
+        + `<use href="#p-settlement" x="${(q / 2) * L - 14}" y="${-0.5 * L - 16}" width="28" height="30" color="#e23b3b"/>`
+        + `<use href="#p-city" x="${(-q / 2) * L - 18}" y="${0.5 * L - 21}" width="36" height="34" color="#2f6fde"/>`;
+      document.getElementById('island').innerHTML = out;
+    })();
+  </script>
 </body>
 </html>

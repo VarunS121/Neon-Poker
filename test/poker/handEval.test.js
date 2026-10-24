@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { evaluate, compare } = require('../src/handEval');
+const { evaluate, compare } = require('../../src/poker/handEval');
 
 const e = s => evaluate(s.split(' '));
 const cases = [
